@@ -1,3 +1,4 @@
+
 name: Docker Build and Push
 
 on:
@@ -19,10 +20,6 @@ jobs:
           username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build Docker image
-        run: |
-          docker build -t moh001/git-hub:latest .
+      - name: Build and Push Docker Image
+        run: docker buildx build --push -t moh001/git-hub:latest .
 
-      - name: Push Docker image
-        run: |
-          docker push moh001/git-hub:latest
