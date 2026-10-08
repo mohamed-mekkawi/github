@@ -1,4 +1,4 @@
-
+```yaml
 name: Docker Build Push and Deploy
 
 on:
@@ -26,7 +26,7 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           docker buildx build --push \
-            -t moh001/git-hub:${{ github.run_number }} \
+            -t moh001/git-hub:${GITHUB_SHA::7} \
             .
 
       - name: Deploy to EC2
@@ -38,8 +38,8 @@ jobs:
           script: |
             cd ~/docker-app
 
-            export IMAGE_TAG=${{ github.run_number }}
+            export IMAGE_TAG=${GITHUB_SHA::7}
 
             docker compose pull
             docker compose up -d
-
+```
