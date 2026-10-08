@@ -1,16 +1,19 @@
 
-name: Docker Build and Push
+name: Docker Build Push and Deploy
 
 on:
   push:
     branches:
       - main
 
+  workflow_dispatch:
+
 jobs:
   docker:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -25,3 +28,18 @@ jobs:
           docker buildx build --push \
             -t moh001/git-hub:${{ github.run_number }} \
             .
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ vars.EC2_HOST }}
+          username: ${{ vars.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/docker-app
+
+            export IMAGE_TAG=${{ github.run_number }}
+
+            docker compose pull
+            docker compose up -d
+
