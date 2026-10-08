@@ -26,7 +26,7 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           docker buildx build --push \
-            -t moh001/git-hub:${GITHUB_SHA::7} \
+            -t moh001/git-hub:${{ github.sha }} \
             .
 
       - name: Deploy to EC2
@@ -38,7 +38,9 @@ jobs:
           script: |
             cd ~/docker-app
 
-            export IMAGE_TAG=${GITHUB_SHA::7}
+            export IMAGE_TAG=${{ github.sha }}
+
+            echo "IMAGE_TAG=$IMAGE_TAG"
 
             docker compose pull
             docker compose up -d
