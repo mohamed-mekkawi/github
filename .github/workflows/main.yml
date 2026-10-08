@@ -1,4 +1,3 @@
-
 name: Docker Build and Push
 
 on:
@@ -21,5 +20,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker Image
-        run: docker buildx build --push -t moh001/git-hub:latest .
-
+        run: |
+          docker buildx build --push \
+            -t moh001/git-hub:${{ github.run_number }} \
+            -t moh001/git-hub:latest \
+            .
